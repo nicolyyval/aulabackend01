@@ -10,7 +10,9 @@ CREATE TABLE usuarios (
     nome VARCHAR(100) NOT NULL,
     sobrenome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
-    datanascimento DATE NOT NULL
+    datanascimento DATE NOT NULL,
+    idade INT NOT NULL,
+    signo VARCHAR(100) NOT NULL
 );
 
 -- inserindo dados
