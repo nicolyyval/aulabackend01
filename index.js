@@ -74,8 +74,10 @@ app.get('/usuarios', async (req, res) => {
 //Rota que insere usuarios
 app.post('/usuarios', async (req, res) => {
     try {
-        const { nome, sobrenome, email, datanascimento } = req.body;
-        await pool.query('INSERT INTO usuarios (nome, sobrenome, email, datanascimento) VALUES ($1, $2, $3, $4)', [nome, sobrenome, email, datanascimento]);
+        const { nome, sobrenome, email, datanascimento} = req.body;
+        const idade = calcularIdade(datanascimento);
+        const signo = calcularSigno(datanascimento);
+        await pool.query('INSERT INTO usuarios (nome, sobrenome, email, datanascimento, idade, signo) VALUES ($1, $2, $3, $4, $5, $6)', [nome, sobrenome, email, datanascimento, idade, signo]);
         res.status(201).send({ mensagem: 'Usuário criado com sucesso! 💋' });
     }   catch (error) {
         console.error('Erro ao criar o usuário', error);
@@ -100,8 +102,11 @@ app.put('/usuarios/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { nome, sobrenome, email, datanascimento } = req.body;
+        const dataNasc = new Date(datanascimento);
+        const idade = calcularIdade(dataNasc);
+        const signo = calcularSigno(dataNasc.getMonth + 1, dataNasc.getDate());
         res.status(200).send({ mensagem: 'Usuário atualizado com sucesso! 💋' });
-        await pool.query('UPDATE usuarios SET nome = $1, sobrenome = $2, email = $3, datanascimento = $4 WHERE id = $5', [nome, sobrenome, email, datanascimento, id]);
+        await pool.query('UPDATE usuarios SET nome = $1, sobrenome = $2, email = $3, datanascimento = $4, idade = $5, signo = $6 WHERE id = $7', [nome, sobrenome, email, datanascimento, idade, signo, id]);
     } catch (error) {
         console.error('Erro ao atualizar o usuário', error);
         res.status(500).json({ message: 'Erro ao atualizar o usuário' });
